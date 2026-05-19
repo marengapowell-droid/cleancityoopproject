@@ -778,8 +778,7 @@ function logout() {
   if(confirm('Sign out?')) {
     currentUser = null;
     currentRole = null;
-    document.getElementById('dashboardScreen').style.display = 'none';
-    document.getElementById('loginScreen').style.display = 'flex';
+    showScreen('login');
     toast('👋 Signed out');
   }
 }
@@ -822,7 +821,7 @@ function refreshAdminData(silent) {
   document.getElementById('statPending').innerText = reports.filter(r => r.status === 'PENDING').length;
   document.getElementById('statResolved').innerText = reports.filter(r => r.status === 'RESOLVED').length;
   let allReportsHtml = reports.length ? reports.slice().reverse().map(r => {
-    let resolveBtn = r.status === 'PENDING' ? `<div class="confirm-row"><button type="button" class="btn-sm" onclick="resolveReport(${JSON.stringify(r.id)})">✓ Mark resolved</button></div>` : '';
+    let resolveBtn = r.status === 'PENDING' ? `<div class="confirm-row"><button type="button" class="btn-sm" onclick="resolveReport('${r.id}')">✓ Mark resolved</button></div>` : '';
     return `<div class="card"><div class="card-row"><div><div class="card-title">⚠️ ${r.type}</div><div class="card-meta">📍 ${r.location}<br>📅 ${r.date}<br>👤 By: ${r.user}</div>${r.desc ? `<div class="card-meta">📝 ${r.desc}</div>` : ''}${resolveBtn}</div><span class="badge ${r.status === 'PENDING' ? 'badge-pending' : 'badge-resolved'}">${r.status}</span></div></div>`;
   }).join('') : '<div class="empty"><div class="empty-icon">📋</div><p>No reports</p></div>';
   document.getElementById('homeReports').innerHTML = allReportsHtml;
@@ -905,7 +904,7 @@ function renderTrack() {
 function renderReportsTab() {
   let list = reports;
   let html = list.length ? list.slice().reverse().map(r => {
-    let resolveBtn = r.status === 'PENDING' ? `<div class="confirm-row"><button type="button" class="btn-sm" onclick="resolveReport(${JSON.stringify(r.id)})">✓ Mark resolved</button></div>` : '';
+    let resolveBtn = r.status === 'PENDING' ? `<div class="confirm-row"><button type="button" class="btn-sm" onclick="resolveReport('${r.id}')">✓ Mark resolved</button></div>` : '';
     return `<div class="card"><div class="card-row"><div><div class="card-title">⚠️ ${r.type}</div><div class="card-meta">📍 ${r.location}<br>📅 ${r.date}<br>👤 By: ${r.user}</div>${r.desc ? `<div class="card-meta">📝 "${r.desc}"</div>` : ''}${resolveBtn}</div><span class="badge ${r.status === 'PENDING' ? 'badge-pending' : 'badge-resolved'}">${r.status}</span></div></div>`;
   }).join('') : '<div class="empty"><div class="empty-icon">⚠️</div><p>No reports</p></div>';
   document.getElementById('reportsTabContent').innerHTML = html;
